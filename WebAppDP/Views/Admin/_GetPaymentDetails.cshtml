@@ -1,0 +1,66 @@
+﻿<!-- Model OrderPaymentViewModel merupakan gabungan dari model OrderViewModel dan PaymentViewModel -->
+@model WebAppDP.Models.OrderPaymentViewModel
+
+<!-- Bagian Partial View, akan tampil dalam bentuk pop up jika menekan tombol Action pada Admin-->
+<div class="modal fade" id="detailModal-@Model.Id_pesanan" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="detailModalLabel">@Model.NamaPemesan</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <!-- Menampilkan data berdasarkan id pesanan -->
+            <div class="modal-body">
+                <p><strong>Id Pesanan</strong> @Model.Id_pesanan</p>
+                <p><strong>NamaPemesan</strong> @Model.NamaPemesan</p>
+                <!-- Menampilkan file desain banner jika Id pesanan yang diklik memiliki jenis product banner-->
+                <!-- Menampilkan file pdf jika Id pesanan yang diklik memiliki jenis product Fotocopy -->
+                @if (Model.JenisProduct == "Banner")
+                {
+                    <p><strong>File Desain      </strong>  <a href="#" onclick="window.open('@Url.Content("~/FileDesign/File/" + @Model.FileDesain)', 'popup', 'width=600,height=600'); return false;">@Model.FileDesain</a></p>
+
+                }
+
+                else if (Model.JenisProduct == "FotoCopy/Print")
+                {
+                    <p>Soft Copy </p>
+                    foreach (var fileName in Model.FileDesain.Split(';'))
+                    {
+                        <p>
+                           <a href="@Url.Content("~/FileDesign/FCPdf/" + fileName)" target="_blank">@fileName</a>
+                        </p>
+                    }
+
+                    @*<p><strong>Soft Copy</strong> <a href="@Url.Content("~/FileDesign/FCPdf/" + @Model.FileDesain)" target="_blank">@Model.FileDesain</a></p>*@
+                }
+                <p><strong>Harga</strong> @Model.HargaPembayaran</p>
+
+                <!-- Jika pesanan yang di klik memiliki jenis pembayaran transfer bank maka akan menampilkan
+       link untuk membuka gambar dari bukti transfer dalam bentuk pop up-->
+                @if (Model.JenisProduct == "Banner" && Model.MPembayaran == "Transfer Bank")
+                {
+                    <p><strong>Bukti Transfer </strong> <a href="#" onclick="window.open('@Url.Content("~/FileDesign/BuktiTF/" + @Model.BuktiTF)', 'popup', 'width=600,height=600'); return false;">@Model.BuktiTF</a></p>
+
+                }
+                else if (Model.JenisProduct == "FotoCopy/Print" && Model.MPembayaran == "Transfer Bank")
+                {
+                    <p><strong>Bukti Transfer </strong> <a href="#" onclick="window.open('@Url.Content("~/FileDesign/BuktiTF/" + @Model.BuktiTF)', 'popup', 'width=600,height=600'); return false;">@Model.BuktiTF</a></p>
+
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Function untuk mengambil Id pesanan pada data yang di klik oleh admin -->
+    <script>
+        $(function() {
+            $("#detailModal-@Model.Id_pesanan").modal("show");
+        });
+    </script>
+}

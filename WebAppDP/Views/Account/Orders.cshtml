@@ -1,0 +1,324 @@
+﻿<!-- Model OrderViewModel dipanggil menggunakan fungsi List<> karena data akan ditampilkang menggunakan perulangan -->
+@model  List<WebAppDP.Models.OrderViewModel>
+@{
+    Layout = null;
+}
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>User Orders</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body class="dark">
+    <!-- Bagian header -->
+    <section class="w3l-header">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("LoginSuccess", "Account")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                    </button>
+                    <!-- Bagian Navigasi Bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("LoginSuccess", "Account")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            @*<li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Alamat", "Distance")">Tambah Alamat</a>
+                            </li>*@
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                        </ul>
+                        <!-- Bagian navigasi bar untuk Dashboard user menggunakan icons fa-user -->
+                        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")">Order</a></li>
+                                  
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian header-->
+
+    <hr />
+    <hr />
+    <hr />
+    <hr />
+    <hr />
+    <hr />
+
+    <!-- Bagian tampilan users orders -->
+    <section class="w3l-contact" id="contact">
+        <div class="contact-infubd py-5">
+            <div class="container py-lg-3 min-vh-100">
+                <!-- Menampilkan semua history orders dari users, menggunakan perulangan foreach -->
+                <div class="contact-grids row">
+                    <!-- Kondisi untuk mengecek apakah Model dari OrderViewModel kosong-->
+                    @if (Model != null)
+                    {
+                        <!-- Perulangan foreach perlu menambahkan List<> pada input Model -->
+                        foreach (var order in Model)
+                        {
+                            <!-- Data ditampilkan dalam bentuk grid kolom -->
+                            <div class="col-lg-4 col-md-6 contact-grid">
+                                <div class="contact-info">
+                                    <br />
+                                    <div class="contact-info-details">
+                                        <h4>Order</h4>
+                                        <p><strong>Id Pesanan:</strong> @order.Id_pesanan</p>
+                                        <p><strong>NamaPemesan</strong> @order.NamaPemesan</p>
+                                        <p><strong>Jenis Product</strong> @order.JenisProduct</p>
+                                        <p><strong>Ukuran Desaint</strong> @order.UkuranDesain</p>
+                                        <p><strong>Metode Pembayaran</strong> @order.MPembayaran</p>
+                                        @if (@order.MPembayaran == "COD")
+                                        {
+                                            <!-- Kondisi untuk mengecek apakah pesanan COD dan pesanan sudah di konfirmasi atau belum-->
+                                            <p>
+                                                <strong>Status</strong>
+                                                <!-- Jika Pesanan telah dikonfirmasi maka status akan menampilkan Sudah di konfirmasi bgitupun sebaliknya-->
+                                                <span style="color: @(order.HasPayment ? "green" : "maroon")">
+                                                    @(order.HasPayment ? "Sudah di Konfirmasi" : "Belum di Konfirmasi")
+                                                </span>
+                                            </p>
+                                        }
+                                        else if (@order.MPembayaran == "Transfer Bank")
+                                        {
+                                            <!-- Kondisi untuk mengecek apakah pesanan Transfer bank dan sudah dibayarkan atau belum-->
+                                            <p>
+                                                <strong>Status</strong>
+                                                <!-- Apabila pesanan sudah dibayarkan maka status akan menampilkan pesan Paid jike belum maka akan menampilkan Unpaid -->
+                                                <span style="color: @(order.HasPayment ? "green" : "red")">
+                                                    @(order.HasPayment ? "Paid" : "Unpaid")
+                                                </span>
+                                            </p>
+                                        }
+
+                                    </div>
+                                    <!-- Button action untuk Bayar pesanan -->
+                                    <a class="btn btn-primary" style="padding: 5px 10px; text-decoration: none; color: white;" href="@Url.Action("PaymentFA", "Product", new { id = @order.Id_pesanan})" @(order.HasPayment ? "disabled" : "")>BayarPesanan</a>
+                                    <!-- Button action untuk hapus pesanan -->
+                                    <a class="btn btn-primary" style="padding: 5px 10px; text-decoration: none; color: white;" href="@Url.Action("HapusPesanan", "Account", new { id = @order.Id_pesanan })" onclick="return hapusPesanan(event)">HapusPesanan</a>
+                                    
+                                    <!-- Konfirmasi apakah ingin menghapus pesanan? -->
+                                    <script>
+                                        function hapusPesanan(event) {
+                                            event.preventDefault();
+                                            Swal.fire({
+                                                title: 'Apakah Anda yakin ingin menghapus pesanan ini?',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Ya, hapus pesanan!',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    Swal.fire(
+                                                        'Pesanan berhasil dihapus!',
+                                                        '',
+                                                        'success'
+                                                    ).then(() => {
+                                                        window.location.href = event.target.href;
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Bagian tampilan user orders -->
+    <!-- Bagian footer-->
+    <footer>
+        <section class="w3l-footer">
+            <div class="w3l-footer-16-main ">
+                <div class="container">
+                    <div class="below-section pt-4 mt-5 text-center">
+                        <div class="columns-2">
+                            <!-- Social media links -->
+                            <ul class="social">
+                                <li>
+                                    <a href="#facebook"><span class="fa-brands fa-facebook" aria-hidden="true"></span></a>
+                                </li>
+                                <li>
+                                    <a href="#twitter"><span class="fa-brands fa-twitter" aria-hidden="true"></span></a>
+                                </li>
+                                <li>
+                                    <a href="#github"><span class="fa-brands fa-instagram" aria-hidden="true"></span></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="columns mt-3">
+                            <p>
+                                © 2020 Literate. All rights reserved | Design by <a href="https://w3layouts.com/">W3Layouts</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- move top -->
+            <button onclick="topFunction()" id="movetop" title="Go to top" style="display: none;">
+                <span class="fa fa-angle-up"></span>
+            </button>
+            <script>
+                // Ketika user scrolls down 20px kebawah pada halaman web, maka button move to top akan muncul
+                window.onscroll = function () {
+                    scrollFunction()
+                };
+
+                function scrollFunction() {
+                    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                        document.getElementById("movetop").style.display = "block";
+                    } else {
+                        document.getElementById("movetop").style.display = "none";
+                    }
+                }
+
+                //Ketika user mengklik button, maka web akan di scroll ke atas
+                function topFunction() {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                }
+            </script>
+        </section>
+    </footer>
+    <!-- /Bagian footer -->
+    <script>
+        $(function () {
+            $('.navbar-toggler').click(function () {
+                $('body').toggleClass('noscroll');
+            })
+        });
+    </script>
+
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+
+
+    <!-- Bagian switch dark theme atau light theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+
+    <!-- Style tambahan untuk bagian grids orders -->
+    <style>
+        .w3l-contact .contact-grids .contact-info-details {
+            color: var(--title-color);
+        }
+
+        .w3l-contact .contact-grid a {
+            padding: 10px;
+        }
+
+        .w3l-contact .contact-grid {
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            padding: 20px;
+        }
+    </style>
+</body>
+</html>

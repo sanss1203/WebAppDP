@@ -1,0 +1,626 @@
+﻿<!-- Model OrderViewModel dipanggil untuk menyimpan data dan memanggil data order pada database -->
+@model WebAppDP.Models.OrderViewModel
+@{
+    Layout = null;
+}
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Foto Copy</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap & Jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script src="@Url.Content("https://unpkg.com/@maptiler/geocoding-control@latest/dist/leaflet.umd.js")"></script>
+    <link href="@Url.Content("https://unpkg.com/@maptiler/geocoding-control@latest/dist/style.css")" rel="stylesheet" />
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body class="dark">
+    <!-- Bagian header -->
+    <section class="w3l-header mb-lg-5">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("LoginSuccess", "Account")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                    </button>
+                    <!-- Bagian Navigasi bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("LoginSuccess", "Account")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            @*<li class="nav-item contact-active">
+                                    <a class="nav-link" href="@Url.Action("Alamat", "Distance")">Tambah Alamat</a>
+                                </li>*@
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                        </ul>
+                        <!-- Bagian navigasi bar untuk Dashboard user menggunakan icons fa-user -->
+                        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")">Order</a></li>
+
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian Header -->
+    <!-- Bagian form untuk membuat pesanan pada layanan fotocopy -->
+    <section class="w3l-contact" id="contact">
+        <div class="contact-infubd py-5">
+            <div class="container py-lg-3">
+                <div class="contact-grids">
+                    <div class="title-order">
+                        <h3>Order Foto Copy</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="partners mt-5">
+
+                                <div class="hours">
+                                    <h6 class="mt-1">Catatan:</h6>
+                                </div>
+                                <p>
+                                    Lengkapi form dibawah ini untuk membuat pesanan, harap isikan dengan informsai yang valid.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="position: relative;">
+                        <div id="loadingSpinner" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 text-light" id="exampleModalLabel">Tambah Alamat</h1>
+                                    <button type="button" class="btn-close" style="color:white;" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row mt-5 mx-auto">
+
+                                        <p>
+                                            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                                Lihat Alamat Tersimpan
+                                            </button>
+                                        </p>
+
+                                        <div class="collapse mt-5 col-md-12" id="collapseExample">
+                                            <div class="card card-body table-responsive">
+                                                <table class="table table-striped col-md-12" id="myTable" style="width:100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id Ongkir</th>
+                                                            <th>Username</th>
+                                                            <th>Alamat Detail</th>
+                                                            <th>Latitude</th>
+                                                            <th>Longitude</th>
+                                                            <th>Harga Ongkir</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 mt-2">
+                                        <h5 class="text-light">Panduan Pengisian Alamat</h5>
+                                        <p>1. Masukkan detail alamat saat ini</p>
+                                        <p>2. Pilih kordinat anda saat ini di map</p>
+                                        <p>3. Klik tombol cek ongkir untuk melihat harga ongkir</p>
+                                        <p>4. Klik tombol simpan alamat untuk menyimpan alamat agar bisa digunakan</p>
+                                    </div>
+                                    <div class="col-md-5 mx-auto inAlamat mt-5 align-content-center">
+                                        <form action="@Url.Action("simpanAlamat2","Product")">
+                                            <div>
+                                                <label for="alamatDetail" style="color: white;">Alamat:</label>
+                                                <input class="form-control mb-2" id="alamatDetail" name="alamatDetail" type="text" required />
+                                            </div>
+
+                                            <div style="display: none;">
+                                                <label for="latitude">Latitude:</label>
+                                                <input class="form-control mb-2" id="latitude" name="latitude" type="text" readonly value="@ViewBag.Latitude" />
+                                            </div>
+                                            <div style="display: none;">
+                                                <label for="longitude">Longitude:</label>
+                                                <input class="form-control mb-2" id="longitude" name="longitude" type="text" readonly value="@ViewBag.Longitude" />
+                                            </div>
+
+                                            <div>
+                                                <label for="hasilOngkir" style="color: white;">Hasil Ongkir:</label>
+                                                <input readonly required class="form-control mb-2" id="hasilOngkir" name="hasilOngkir" type="text" />
+                                            </div>
+                                            <button type="button" id="cekOngkirButton" class="btn btn-primary" onclick="hitungOngkir()">Cek Ongkir</button>
+                                            <button type="button" class="btn btn-primary" onclick="validasiSaveOngkir()">Simpan ongkir</button>
+
+                                        </form>
+
+                                    </div>
+                                    <!-- Bagian kordinat map menggunakan google api, iframe -->
+                                    <div class="map pt-md-5">
+                                        <h5>Map</h5>
+
+                                        <div id="map"
+                                             style="width: 100%; height: 600px;"
+                                             class=" leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+                                             tabindex="0"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @using (Html.BeginForm("BuatPesanan", "Product", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
+                    {
+                        <div class="row justify-content-center mt-1">
+                            <div class="col-sm-6 mx-auto">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.NamaPemesan, new { @class = "contact-input", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.NamaPemesan)
+                                </div>
+
+                                <div class="form-group mt-2">
+                                    @Html.LabelFor(model => model.Alamat, new { @class = "control-label" })
+                                    <select id="alamatDropdown" name="Alamat" class="form-control-modifx form-select" required="">
+                                        <option value="">--Pilih Alamat*--</option>
+                                        @foreach (var item in Model.AlamatList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                        <option value="tambahAlamat" class="tambah-alamat-option btn btn-primary"
+                                                data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            + Tambah Alamat
+                                        </option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.Alamat)
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.NoHP, new { @class = "contact-input", placeholder = "Nomor Hp*", required = "", type = "number" })
+                                    @Html.ValidationMessageFor(model => model.NoHP)
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.JenisProduct, new { @class = "contact-input", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.JenisProduct)
+                                </div>
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.UkuranDesain, new SelectList(new[] { "A4 HVS", "F4 HVS" }), "-- Pilih ukuran kertas* --", new { @class = "form-control-modifx", required = "" })
+                                    @Html.ValidationMessageFor(model => model.UkuranDesain, "", new { @class = "text-danger" })
+                                </div>
+
+
+                            </div>
+                            <div class="col-sm-6 mx-auto">
+                                <div class="form-group">
+                                    <label class="label-desing-B">Pilih file*, *pdf *Maksimal[5MB]</label>
+                                    <input type="file" class="type-file" id="file" name="multfile" accept=".pdf" multiple required="" />
+                                    @Html.ValidationMessageFor(model => model.FileDesain)
+                                </div>
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.JumlahCopy, new SelectList(Enumerable.Range(1, 50)), "-- Pilih jumlah Rangkap* --", new { @class = "form-control-modifx", required = "" })
+                                    @Html.ValidationMessageFor(model => model.JumlahCopy, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.TextAreaFor(model => model.Keterangan, new { @class = "contact-input", placeholder = "Keterangan" })
+                                    @Html.ValidationMessageFor(model => model.Keterangan)
+                                </div>
+                                <div class="form-group">
+                                    @Html.DropDownListFor(model => model.MPembayaran, new SelectList(new[] { "Transfer Bank", "COD" }), "-- Pilih Metode Pembayaran* --", new { @class = "form-control-modifx", required = "" })
+                                    @Html.ValidationMessageFor(model => model.MPembayaran, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-primary theme-button" id="btnSubmit">Buat Pesanan</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        @* </div>*@
+    </section>
+    <!-- /Bagian form untuk membuat pesanan pada layanan fotocopy -->
+    <!-- Bagian footer -->
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+    <!-- /Function untuk Disable body scroll ketika nav toggle aktif -->
+    <!-- Function untuk Switch Dark theme atau Light Theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+
+    <!-- Style tambahan untuk bagian form membuat pesanan -->
+    <style>
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body {
+            background-color: #161625;
+        }
+
+        .modal-header {
+            background-color: #161625;
+        }
+
+        .modal-footer {
+            background-color: #161625;
+        }
+
+
+        #loadingSpinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        w3l-contact {
+            padding-top: 50px; /* Ubah nilai sesuai dengan kebutuhan Anda */
+        }
+
+        .w3l-contact .form-control-modifx {
+            font-weight: normal;
+            font-style: normal;
+            font-family: inherit;
+            border: none;
+            color: var(--title-color);
+            font-size: 16px;
+            width: 100%;
+            height: 55px;
+            background: var(--bg-color);
+            padding: 0px 20px;
+            outline: none;
+            border-radius: var(--border-radius);
+            border-width: 1px;
+            border-style: solid;
+            border-color: var(--border-color);
+            -o-border-image: initial;
+            border-image: initial;
+            margin-bottom: 10px;
+        }
+
+        .w3l-contact .label-desing-B {
+            color: var(--title-color);
+        }
+
+        .title-order {
+            color: var(--title-color);
+            text-align: center;
+        }
+    </style>
+</body>
+</html>
+<script src="~/lib/sendRequest.js"></script>
+
+<script>
+    function hitungOngkir() {
+        var latitude = document.getElementById('latitude').value;
+        var longitude = document.getElementById('longitude').value;
+
+        var endLocation = `${longitude},${latitude}`;
+        var apiUrl = `https://us1.locationiq.com/v1/directions/driving/124.8765224,1.2779935;${endLocation}?key=pk.5dd685a490e1e137162422a485dcee54&overview=full`;
+
+        var detAlamat = document.getElementById('alamatDetail').value;
+        if (detAlamat === '' || latitude === '' || longitude === '') {
+            Swal.fire({
+                title: "Error",
+                text: "Alamat tidak boleh kosong",
+                icon: "error"
+            });
+        }
+
+        fetch(apiUrl)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var distance = data.routes[0].distance;
+                var ongkir = distance < 500 ? 1000 : distance / 500 * 2000;
+                var finalHar = ongkir.toFixed(0).toString();
+
+                var hasilOngkirInput = document.getElementById('hasilOngkir');
+                hasilOngkirInput.value = finalHar;
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+</script>
+
+<script>
+    const key = "PkD3G8sZRMg9xJZ0lK7y";
+    const map = L.map("map").setView([1.2779935, 124.8765224], 13);
+
+    const tiles = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution:
+                '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }
+    ).addTo(map);
+
+    L.Control.geocoder().addTo(map);
+
+    const customIcon = L.icon({
+        iconUrl: "@Url.Content("~/assets/images/map-icon.svg")", // Ganti dengan URL gambar ikon Anda
+        iconSize: [32, 32], // Sesuaikan ukuran ikon jika diperlukan
+    });
+
+    let currentMarker = null;
+
+    function onMapClick(e) {
+        if (currentMarker) {
+            map.removeLayer(currentMarker);
+        }
+
+        currentMarker = L.marker(e.latlng, { icon: customIcon }).addTo(map);
+
+        const latitudeInput = document.getElementById("latitude");
+        const longitudeInput = document.getElementById("longitude");
+
+        latitudeInput.value = e.latlng.lat.toFixed(6);
+        longitudeInput.value = e.latlng.lng.toFixed(6);
+
+        const popupContent = `
+          <b>Latitude:</b> ${e.latlng.lat.toFixed(6)}<br />
+          <b>Longitude:</b> ${e.latlng.lng.toFixed(6)}
+        `;
+        const popupOptions = { className: "custom-popup" }; // Tambahkan kelas kustom untuk styling
+        const popup = L.popup(popupOptions)
+            .setLatLng(e.latlng)
+            .setContent(popupContent)
+            .openOn(map);
+    }
+    map.on("click", onMapClick);
+</script>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Product/getDataAlamat',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#myTable').DataTable({
+                    data: data,
+                    columns: [
+                        { data: 'Id_ongkir' },
+                        { data: 'Username' },
+                        { data: 'AlamatDetail' },
+                        { data: 'Latitude' },
+                        { data: 'Longitude' },
+                        { data: 'HargaOngkir' },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return '<button class="btn btn-danger btn-delete" data-id="' + data.Id_ongkir + '"><i class="fas fa-trash"></i></button>';
+                            }
+                        }
+                    ]
+                });
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $(document).on('click', '.btn-delete', function () {
+            var id_ongkir = $(this).data('id');
+            console.log(id_ongkir);
+            Swal.fire({
+                title: "Delete",
+                text: "Anda yakin ingin menghapus data ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#loadingSpinner').show();
+                    $.ajax({
+                        url: '/Product/hapusAlamat',
+                        method: 'POST',
+                        data: { id_ongkir: id_ongkir },
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#loadingSpinner').show();
+                            if (response.status === 'success') {
+                                Swal.fire('Sukses', response.message, 'success').then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire('Error', response.message, 'error');
+                            }
+                        },
+                        error: function (error) {
+                            Swal.fire("Error", "Terjadi kesalahan dalam request ajax");
+                        },
+                        complete: function () {
+                            $('#loadingSpinner').fadeOut();
+                        },
+                    });
+                }
+            });
+        });
+    });
+
+</script>
+
+<script>
+    function validasiSaveOngkir() {
+
+        var detAlamat = document.getElementById('alamatDetail').value;
+        var hasilOngkir = document.getElementById('hasilOngkir').value;
+
+        if (detAlamat === '') {
+            Swal.fire("Error", "Detail Alamat tidak boleh kosong", "error");
+            return false;
+        }
+        if (hasilOngkir === '') {
+            Swal.fire("Error", "Silahkan cek ongkir terlebih dahulu", "error");
+            return false;
+        }
+
+        document.forms[0].submit();
+    }
+
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('#alamatDropdown').on('change', function () {
+            var selectedValue = $(this).val();
+            if (selectedValue === 'tambahAlamat') {
+
+                $('#exampleModal').modal('show');
+
+                $(this).val('');
+            }
+        });
+    });
+</script>

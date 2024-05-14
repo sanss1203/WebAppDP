@@ -1,0 +1,179 @@
+﻿<!-- Model OrderPaymentViewModel merupakan gabungan dari model OrderViewModel dan PaymentViewModel -->
+@model List<WebAppDP.Models.OrderPaymentViewModel>
+
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - Fotocopy</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & Jquery -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="~/assets/AdminPanel/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/assets/AdminPanel/js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="~/assets/AdminPanel/js/datatables-simple-demo.js"></script>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="index.html">Admin</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            @*<div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>*@
+        </form>
+
+        <!-- Bagian navigasi bar -->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Rekening","Admin")">Ganti NoRekening</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Logout","Admin")">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Bagian Sidebar Navigasi -->
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="@Url.Action("Administration", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Order</div>
+                        <a class="nav-link" href="@Url.Action("TransferBank", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-money-check-alt"></i></div>
+                            Banner
+                        </a>
+                        <a class="nav-link" href="@Url.Action("FotoCopy", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-copy"></i></div>
+                            Foto Copy
+                        </a>
+                        <a class="nav-link" href="@Url.Action("JadwalService", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            Jadwal Service
+                        </a>
+                        <a class="nav-link" href="@Url.Action("GantiHargaProduct", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-dollar-sign"></i></div>
+                            Ganti Harga Product
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Bagian content utama -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Fotocopy</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Data Order Fotocopy</li>
+                    </ol>
+
+                    <!-- Bagian Tabel pesanan -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Data
+                        </div>
+                        <div class="card-body">
+                            <table id="datatablesSimple">
+                                <!-- Nama field tabel -->
+                                <thead>
+                                    <tr>
+                                        <th>Id Pesanan</th>
+                                        <th>Nama Pemesan</th>
+                                        <th>Nomor Hp/WA</th>
+                                        <th>Tanggal Pesanan</th>
+                                        <th>Jenis Product</th>
+                                        <th>Ukuran</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <!-- Isi tabel, menampilkan semua data pesanan berdasarkan jenis product Fotocopy-->
+                                <tbody>
+                                    @foreach (var order in Model)
+                                    {
+                                    <tr>
+                                        <td>@order.Id_pesanan</td>
+                                        <td>@order.NamaPemesan</td>
+                                        <td>@order.NoHP</td>
+                                        <td>@order.TanggalPesanan</td>
+                                        <td>@order.JenisProduct</td>
+                                        <td>@order.UkuranDesain</td>
+                                        <td>@order.MPembayaran</td>
+
+                                        <!-- Kondisi apabila Pesanan sudah dibayarkan atau di konfirmasi maka status akan menampilkan Paid,
+                                            Jika belum maka akan menampilkan status Unpaid -->
+                                        <td>
+                                            <p style="color: @(order.HasPayment ? "green" : "maroon")">
+                                                @(order.HasPayment ? "Paid" : "Unpaid")
+                                            </p>
+                                        </td>
+
+                                        <!-- Bagian Action untuk Details, menampilkan informasi tambahan pada setiap pesanan berdasarkan kondisi diatas -->
+                                        <td>
+                                            <a href="@Url.Action("GetPaymentDetails", "Admin", new { id_pesanan = order.Id_pesanan })" data-toggle="modal" data-target="#detailModal-@order.Id_pesanan">
+                                                Detail
+                                            </a>
+                                            <!-- Memanggil PartialView dalam bentuk pop up dan menampilkan data berdasarkan kondisi -->
+                                            @Html.Partial("_GetPaymentDetails", order)
+                                        </td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

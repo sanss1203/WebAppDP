@@ -1,0 +1,315 @@
+﻿<!-- Model LoginViewModel dipanggil untuk menyimpan data register di database melalui form -->
+@model WebAppDP.Models.LoginViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Register";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Account Register</title>
+
+    <!-- fontawsome icons-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+    <!-- Bagian header -->
+    <section class="w3l-header">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+
+                    </button>
+                    <!-- Bagian navigasi bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="contact.html">Contact</a>
+                            </li>
+                            <li class="nav-item login-active">
+                                <a class="nav-link" href="@Url.Action("LoginView", "Account")">Masuk</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!--/Bagian header-->
+
+    <!-- Bagian Title kontent pada body website -->
+    <nav id="breadcrumbs" class="breadcrumbs">
+        <div class="container page-wrapper text-center">
+            <div class="header-section">
+                <h2 class="mb-2">Register</h2>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bagian form Register Akun -->
+    <section class="w3l-account py-5">
+        <div class="container py-lg-3">
+            <div class="literacy-login">
+                <div class="literacy-login-info">
+                    <h2>Register Akun</h2>
+                    @using (Html.BeginForm("RegisterAct", "Account", FormMethod.Post, new { id = "register-form" }))
+                    {
+                        <div asp-validation-summary="All"></div>
+
+                        <label>Nama Lengkap</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.NamaLengkap, new { @class = "form-control", autofocus = "autofocus", required = "" })
+                        </div>
+
+                        <label>Username</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", id="username", name="username", autofocus = "autofocus", required = "" })
+                        </div>
+
+                        <label>Password</label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "", id = "password" })
+                        </div>
+                        <p>*Password harus memuat minimal 7 karekter</p>
+                        <p>*Password minimal memuat 1 huruf besar, angka, symbol</p>
+                        
+                        <div class="mt-4">
+                            <label>Konfirmasi Password</label>
+                            <div class="input-group">
+                                @Html.PasswordFor(m => m.KonfirmasiPassword, new { @class = "form-control", required = "", id = "confirm-password" })
+                                @Html.ValidationMessageFor(m => m.KonfirmasiPassword)
+                            </div>
+                        </div>
+                        
+
+                        <label>Email</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = "", id="usermail", name = "usermail" })
+                        </div>
+
+                        <button type="submit" id="btnSubmit" class="btn btn-primary theme-button btn-login">Register</button>
+                    }
+
+
+                    <script>
+                        // Mendapatkan elemen input password dan konfirmasi password
+                        var passwordInput = document.getElementById("password");
+                        var confirmPasswordInput = document.getElementById("confirm-password");
+
+                        // Menambahkan event listener untuk mengaktifkan validasi saat nilai password berubah
+                        passwordInput.addEventListener("input", validatePassword);
+
+                        // Fungsi untuk validasi password
+                        function validatePassword() {
+                            var password = passwordInput.value;
+                            var confirmPassword = confirmPasswordInput.value;
+
+                            // Mengatur pola regex untuk memvalidasi password
+                            var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{7,}$/;
+
+                            // Memeriksa apakah password memenuhi persyaratan
+                            if (passwordPattern.test(password)) {
+                                // Menghapus pesan kesalahan jika password valid
+                                confirmPasswordInput.setCustomValidity("");
+                            } else {
+                                // Menampilkan pesan kesalahan jika password tidak memenuhi persyaratan
+                                confirmPasswordInput.setCustomValidity("Password harus terdiri dari minimal 7 karakter, dengan setidaknya satu huruf besar, satu huruf kecil, satu angka, dan satu simbol.");
+                            }
+                        }
+                    </script>
+
+                    <!-- Jika sudah punya akun maka bisa mengklik link ini untuk di redirect ke form login -->
+                    <p class="account1">Sudah memiliki akun? <a href="@Url.Action("LoginView", "Account")">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Form register akun -->
+
+
+    <!-- move top -->
+    <script>
+        // Ketika user scrolls down 20px kebawah pada halaman web, maka button move to top akan muncul
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("movetop").style.display = "block";
+            } else {
+                document.getElementById("movetop").style.display = "none";
+            }
+        }
+
+        //Ketika user mengklik button, maka web akan di scroll ke atas
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <!-- //move top -->
+    <script>
+        $(function () {
+            $('.navbar-toggler').click(function () {
+                $('body').toggleClass('noscroll');
+            })
+        });
+    </script>
+
+
+
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+
+    <!-- Function untuk Switch Dark theme atau Light Theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+    <!-- /Function untuk Switch Dark theme atau Light Theme -->
+
+
+    <!-- Function untuk konfirmasi pembuatan akun -->
+    @*<script>
+      $(function () {
+        $('#register-form').submit(function () {
+          event.preventDefault();
+          Swal.fire({
+            title: 'Apakah Anda yakin ingin membuat akun?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: $(this).serialize(),
+                success: function (result) {
+                  Swal.fire({
+                    title: 'Akun berhasil dibuat',
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                  }).then((result) => {
+                    window.location.href = '@Url.Action("Verification", "Account")';
+                  });
+                },
+                error: function (xhr, status, error) {
+                  Swal.fire({
+                    title: 'Terjadi kesalahan',
+                    text: error,
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                  });
+                }
+              });
+            }
+          });
+        });
+      });
+    </script>*@                        
+</body>
+</html>
+

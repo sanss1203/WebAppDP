@@ -1,0 +1,237 @@
+﻿<!-- Model LoginViewModel dipanggil agar supaya data pada form bisa disesuaikan pada database -->
+@model WebAppDP.Models.LoginViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Login";
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Masuk</title>
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & Jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+    <!-- Bagian header -->
+    <section class="w3l-header">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+
+                    </button>
+                    <!-- Bagian Navigasi Bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("Index", "Home")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                            <li class="nav-item login-active">
+                                <a class="nav-link" href="@Url.Action("LoginView", "Account")">Masuk</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Bagian toggle switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian header -->
+    <!-- Bagian Title pada body Website -->
+    <nav id="breadcrumbs" class="breadcrumbs">
+        <div class="container page-wrapper text-center">
+            <div class="header-section">
+                <h2 class="mb-2">Masuk</h2>
+            </div>
+            <a href="@Url.Action("Index", "Home")">Home</a> » <span class="breadcrumb_last" aria-current="page">Masuk</span>
+        </div>
+    </nav>
+
+    <!-- Bagian Form untuk Login -->
+    <section class="w3l-account py-5">
+        <div class="container py-lg-3">
+            <div class="literacy-login">
+                <div class="literacy-login-info">
+                    <h2 align="center">Masuk </h2>
+                    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "login-form" }))
+                    {
+                        <label>Username</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", id = "usernames", name = "usernames", autofocus = "autofocus", required = "" })
+                        </div>
+
+                        <label>Password</label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", autofocus = "autofocus", required = "" })
+                        </div>
+                        @Html.HiddenFor(m => m.IsVerified, new { id = "IsVerified" })
+                        <button class="btn btn-primary theme-button btn-login" id="login-button" type="submit">Masuk</button>
+
+                        <!-- Tampilkan pesan error ketika username atau password salah -->
+                        if (TempData["swalScript"] != null)
+                        {
+                            @Html.Raw(TempData["swalScript"])
+                        }
+
+                        
+
+                        @*<script>
+                document.getElementById("login-button").addEventListener("click", function () {
+                    // Mendapatkan nilai IsVerified dari hidden field
+                    var isVerifiedValue = document.getElementById("IsVerified").value;
+                    var isVerified = isVerifiedValue === "True"; // Ubah nilai menjadi boolean
+
+                    console.log("IsVerified:", isVerified); // Tambahkan pesan konsol
+
+                    if (!isVerified) {
+                        console.log("Show SweetAlert2"); // Tambahkan pesan konsol
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: 'Akun Anda belum di verifikasi'
+                        });
+                    }
+                });
+            </script>*@
+
+                    }
+
+                    <!-- Apabila belum mempunyai akun, maka register akun bisa di klik lewat link ini -->
+                    <p class="account1">Belum punya akun? <a href="@Url.Action("Register", "Account")">Register Sekarang</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /Bagian form untuk Login-->
+    <!-- Move top -->
+    <script>
+        // Ketika user scrolls down 20px kebawah pada halaman web, maka button move to top akan muncul
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("movetop").style.display = "block";
+            } else {
+                document.getElementById("movetop").style.display = "none";
+            }
+        }
+
+        //Ketika user mengklik button, maka web akan di scroll ke atas
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <!-- /Move top -->
+    <script>
+        $(function () {
+            $('.navbar-toggler').click(function () {
+                $('body').toggleClass('noscroll');
+            })
+        });
+    </script>
+
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+    <!--/Function untuk Disable body scroll ketika nav toggle aktif-->
+    <!-- Function untuk Switch Dark theme atau Light Theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+    <!-- Function untuk Switch Dark theme atau Light Theme -->
+
+
+</body>
+</html>

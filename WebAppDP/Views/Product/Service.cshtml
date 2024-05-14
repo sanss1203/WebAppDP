@@ -1,0 +1,504 @@
+﻿@model List<WebAppDP.Models.ServicesViewModel>
+@{
+    Layout = null;
+}
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Services Komputer</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & Jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-starterxx.css" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css"
+          rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/assets/css/chatStyle.css" />
+    @*<script src="~/assets/js/chatJs.js"></script>*@
+</head>
+<body class="dark">
+    <!-- Bagian header -->
+    <section class="w3l-header">
+        <header id="site-header" class="fixed-top nav-fixed">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("LoginSuccess", "Account")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                    </button>
+                    <!-- Bagian navigasi bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("LoginSuccess", "Account")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            @*<li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Alamat", "Distance")">Tambah Alamat</a>
+                            </li>*@
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                        </ul>
+                        <!-- Bagian navigasi bar untuk Dashboard user menggunakan icons fa-user -->
+                        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")">Order</a></li>
+                                   
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle" />
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian header -->
+    <!-- Bagian title pada body website -->
+    @*<nav id="breadcrumbs" class="breadcrumbs">
+        <div class="container page-wrapper text-center">
+            <div class="header-section">
+                <h2 class="mb-2">Service Komputer</h2>
+            </div>
+        </div>
+    </nav>*@
+
+    <section class="w3l-index2 py-5 mt-5">
+        <div class="container py-md-3 mt-5">
+
+            <div class="row mx-auto">
+                <div class="col-sm-12 mt-4 mb-4">
+                    <p>
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Lihat Status Jadwal Anda
+                        </button>
+                    </p>
+                    <div class="collapse mt-2" id="collapseExample">
+                        <div class="card card-body table-responsive">
+                            @if (Model.Any())
+                            {
+                                <table class="table table-striped ">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Lengkap</th>
+                                            <th>No Hp</th>
+                                            <th>Jenis Services</th>
+                                            <th>Jenis OS</th>
+                                            <th>Tanggal Masuk</th>
+                                            <th>Estimasi Selesai</th>
+                                            <th>Keterangan</th>
+                                            <th>Status</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var serv in Model)
+                                        {
+                                            <tr>
+                                                <td>@serv.Nama_Lengkap</td>
+                                                <td>@serv.No_hp</td>
+                                                <td>@serv.Jnis_service</td>
+                                                <td>@serv.Jnis_Os</td>
+                                                <td>@serv.Tgl_masuk</td>
+                                                <td>@serv.Estimasi_selesai</td>
+                                                <td>
+                                                    @serv.Keterangan
+                                                </td>
+                                                <td>
+                                                    
+                                                    @if (serv.Status == "Status Request")
+                                                    {
+                                                        <span class="badge bg-danger">@serv.Status</span>
+                                                    }
+                                                    else if (serv.Status == "On Progress")
+                                                    {
+                                                        <span class="badge bg-warning">@serv.Status</span>
+                                                    }
+                                                    else if (serv.Status == "Success")
+                                                    {
+                                                        <span class="badge bg-success">@serv.Status</span>
+                                                    }
+                                                    else { 
+                                                        @serv.Status
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p>Belum ada Jadwal Request.</p>
+                            }
+                            <script>
+                                function hapusPesanan(event) {
+                                    event.preventDefault();
+                                    Swal.fire({
+                                        title: 'Apakah Anda yakin ingin menghapus alamat ini?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Ya, hapus alamat!',
+                                        cancelButtonText: 'Batal'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            Swal.fire(
+                                                'Alamat berhasil dihapus!',
+                                                '',
+                                                'success'
+                                            ).then(() => {
+                                                window.location.href = event.target.href;
+                                            });
+                                        }
+                                    });
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-section text-center mx-auto mt-4">
+                <h3>Services Komputer </h3>
+                <p class="my-3">
+                    Beberapa List layanan yang kami tawarkan, silahkan scroll kebawah untuk menghubungi Admin.
+                </p>
+            </div>
+            <div class="row bottom_grids pt-md-3 text-center">
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <div class="s-block">
+                        <a href="@Url.Action("Details", "Services", new { id = 1})" class="d-block p-lg-4 p-3">
+                            <img src="~/assets/images/InstallasiOS.jpg" alt="" class="img-fluid img-curve">
+                            <h3 class="my-3">Install Sistem Operasi & Aplikasi</h3>
+                            <p class="">
+                                Jika Anda membutuhkan instal ulang sistem operasi komputer Anda atau membutuhkan bantuan dalam menginstal program aplikasi pendukung, kami siap membantu Anda.
+                                Kami memiliki pengetahuan dan pengalaman dalam instalasi sistem operasi dan aplikasi, sehingga Anda dapat memiliki komputer yang berjalan dengan lancar dan sesuai kebutuhan Anda.
+                            </p>
+                            <h4 class="btn btn-primary mt-3">Details</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <div class="s-block">
+                        <a href="@Url.Action("Details", "Services", new { id = 2})" class="d-block p-lg-4 p-3">
+                            <img src="~/assets/images/hardware-software-maintenence.jpg" alt="" class="img-fluid img-curve">
+                            <h3 class="my-3">Maintenance Perangkat Keras/Perangkat Lunak</h3>
+                            <p class="">
+                                Kami menyediakan layanan perawatan rutin untuk menjaga kinerja optimal perangkat keras dan perangkat lunak komputer Anda.
+                                Dengan perawatan yang berkala, kami dapat mendeteksi dan mengatasi masalah potensial sebelum mereka menjadi lebih serius.
+                            </p>
+                            <h4 class="btn btn-primary mt-3">Details</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <div class="s-block">
+                        <a href="@Url.Action("Details", "Services", new { id = 3})" class="d-block p-lg-4 p-3">
+                            <img src="~/assets/images/ServiceComputer.jpg" alt="" class="img-fluid img-curve">
+                            <h3 class="my-3">Service Komputer/Laptop</h3>
+                            <p class="">
+                                Tim kami yang berdedikasi akan membantu Anda dalam perbaikan komputer dan laptop.
+                                Apakah itu masalah perangkat keras atau perangkat lunak, kami akan melakukan segala yang diperlukan untuk memperbaikinya agar perangkat Anda berfungsi dengan baik.
+                            </p>
+                            <h4 class="btn btn-primary mt-3">Details</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <div class="s-block">
+                        <a href="@Url.Action("Details", "Services", new { id = 4 })" class="d-block p-lg-4 p-3">
+                            <img src="~/assets/images/Buildpc.jpg" alt="" class="img-fluid img-curve">
+                            <h3 class="my-3">Rakit Komputer</h3>
+                            <p class="">
+                                Kami dapat membantu Anda merakit komputer sesuai dengan spesifikasi yang Anda inginkan.
+                                Dengan pemahaman mendalam tentang komponen-komponen yang tersedia di pasaran, kami akan memastikan Anda mendapatkan komputer yang optimal dan sesuai dengan anggaran Anda.
+                            </p>
+                            <h4 class="btn btn-primary mt-3">Details</h4>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mt-5">
+                    <div class="s-block">
+                        <a href="@Url.Action("Details", "Services", new { id = 5})" class="d-block p-lg-4 p-3">
+                            <img src="~/assets/images/backup-data.jpg" alt="" class="img-fluid img-curve">
+                            <h3 class="my-3">Backup Data</h3>
+                            <p class="">
+                                Kami dapat membantu Anda dalam proses backup data yang terjadwal secara rutin, sehingga data penting Anda tetap aman dan tersedia saat Anda membutuhkannya.
+                                Jika Anda mengalami kehilangan data, tim kami juga siap membantu Anda dalam proses restore data dengan cepat dan efisien.
+                            </p>
+                            <h4 class="btn btn-primary mt-3">Details</h4>
+
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Bagian deskripsi kontak-->
+    <section class="w3l-contact" id="contact">
+        <div class="contact-infubd py-5">
+            <div class="container py-lg-3">
+                <div class="row mx-auto">
+                    <div class="col-sm-4 mx-auto">
+                        <div class="partners">
+                            <div class="cont-details">
+                                <p class="mt-3 mb-4">
+                                    Kunjungi toko kami sekarang untuk mendapatkan layanan yang terbaik dan terpercaya! Kami menawarkan harga yang bersaing dan berbagai penawaran menarik untuk layanan cetak banner stand, fotocopy, dan perbaikan komputer. Kami siap melayani Anda dengan cepat, profesional, dan terpercaya!
+                                </p>
+                            </div>
+                            <div class="hours">
+                                <h6 class="mt-4">Visit Us:</h6>
+                                <p>Jl. Kampus Unima No.4, Tataaran Dua</p>
+
+                                <h6 class="mt-4">Contact:</h6>
+                                <p class="margin-top">+6288242183026</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mx-auto">
+                        <div class="card cardsCostumize">
+                            <div class="card-header">
+                                <h4>Live Chat Admin</h4>
+                            </div>
+                            <div class="card-body" style="max-height: 300px; overflow-y: scroll;">
+                                <ul id="messageList"></ul>
+                            </div>
+                            <div class="chat-box ml-3">
+                                <div id="chatbox"></div>
+                                <div class="row g-3">
+                                    <input type="text" id="txtSender" value="@ViewBag.userID" readonly="readonly" />
+                                    <input type="text" id="txtMessage" placeholder="Pesan" />
+                                    <input class="btn btn-primary" type="button" id="btnSend" value="Kirim" />
+                                </div>
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+                                <script src="~/signalr/hubs"></script>
+                                <script>
+                                    $(function () {
+                                        var chatHub = $.connection.chatHub;
+
+                                        chatHub.client.receiveMessage = function (sender, message) {
+                                            $('#messageList').append('<li><strong>' + sender + '</strong>: ' + message + '</li>');
+                                            scrollChatBox();
+                                        };
+
+                                        $.connection.hub.start();
+
+                                        $('#btnSend').click(function () {
+                                            var sender = $('#txtSender').val();
+                                            var message = $('#txtMessage').val();
+
+                                            chatHub.server.sendMessage(sender, message);
+
+                                            $('#txtMessage').val('').focus();
+                                        });
+
+                                        function scrollChatBox() {
+                                            var chatboxBody = $('.card-body');
+                                            chatboxBody.scrollTop(chatboxBody[0].scrollHeight);
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+                <!-- Bagian kordinat map menggunakan google api, iframe -->
+                <div class="map mt-5 pt-md-5">
+                    <h5>Map</h5>
+                    <div id="map"></div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8259104437566!2d124.87456087447217!3d1.2779551618037643!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3287152710c291ab%3A0xcc9fc04721b2e283!2sJl.%20Kampus%20Unima%20No.4%2C%20Tataaran%20Dua%2C%20Kec.%20Tondano%20Sel.%2C%20Kabupaten%20Minahasa%2C%20Sulawesi%20Utara!5e0!3m2!1sid!2sid!4v1683297067964!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- /Bagian deskripsi kontak -->
+    <!-- Bagian footer -->
+    <footer>
+        <section class="w3l-footer">
+            <div class="w3l-footer-16-main py-5">
+                <div class="container">
+                    <div class="below-section pt-4 mt-5 text-center">
+                        <div class="columns-2">
+                            <!-- Links social media -->
+                            <ul class="social">
+                                <li>
+                                    <a href="#facebook">
+                                        <span class="fa-brands fa-facebook" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#linkedin">
+                                        <span class="fa-brands fa-instagram" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#twitter">
+                                        <span class="fa-brands fa-twitter" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- move top -->
+            <button onclick="topFunction()"
+                    id="movetop"
+                    title="Go to top"
+                    style="display: block">
+                <span class="fa fa-angle-up"></span>
+            </button>
+            <script>
+                // Ketika user scrolls down 20px kebawah pada halaman web, maka button move to top akan muncul
+                window.onscroll = function () {
+                    scrollFunction();
+                };
+
+                function scrollFunction() {
+                    if (
+                        document.body.scrollTop > 20 ||
+                        document.documentElement.scrollTop > 20
+                    ) {
+                        document.getElementById("movetop").style.display = "block";
+                    } else {
+                        document.getElementById("movetop").style.display = "none";
+                    }
+                }
+
+                //Ketika user mengklik button, maka web akan di scroll ke atas
+                function topFunction() {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                }
+            </script>
+            <script>
+                $(function () {
+                    $(".navbar-toggler").click(function () {
+                        $("body").toggleClass("noscroll");
+                    });
+                });
+            </script>
+        </section>
+    </footer>
+    <!-- /Bagian footer -->
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+
+    <!-- Bagian untuk switch dark theme atau light theme -->
+    <script>
+        const bodyElement = document.querySelector("body");
+        const themeToggle = document.querySelector("#themeToggle");
+        const darkModeMql = window.matchMedia("(prefers-color-scheme: dark)");
+
+        const currentTheme = localStorage.getItem("theme")
+            ? localStorage.getItem("theme")
+            : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === "dark") {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark";
+            } else {
+                bodyElement.classList.remove("dark");
+                return "";
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            } else {
+                bodyElement.classList.remove("dark");
+                localStorage.setItem("theme", "");
+            }
+        }
+
+        themeToggle.addEventListener("change", themeSwitcher);
+    </script>
+
+    <style>
+        .cardsCostumize {
+            height: 350px;
+        }
+    </style>
+</body>
+</html>
+

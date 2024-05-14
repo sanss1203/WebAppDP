@@ -1,0 +1,103 @@
+﻿<!-- Model AdminLoginModel digunakan untuk mengambil data user admin di database -->
+@model WebAppDP.Models.AdminLoginModel
+@{
+    Layout = null;
+
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Login</title>
+
+    <!-- Bootstrap & Jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+    <!-- Form Admin login -->
+    <section class="w3l-account py-5">
+        <div class="container py-lg-3">
+            <div class="literacy-login">
+                <div class="literacy-login-info">
+                    <h2>Admin Login</h2>
+                    @using (Html.BeginForm("AdminLoginAct", "Admin", FormMethod.Post))
+                    {
+                        <label>Username</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", autofocus = "autofocus", required = "" })
+                        </div>
+
+                        <label>Password</label>
+                        <div class="input-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", autofocus = "autofocus", required = "" })
+                        </div>
+                        <button class="btn btn-primary theme-button btn-login" type="submit">Login</button>
+                        if (TempData["swalScript"] != null)
+                        {
+                            @Html.Raw(TempData["swalScript"])
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Style tambahan pada bagian form admin login -->
+    <style>
+        .w3l-account .literacy-login-info h2 {
+            text-align: center;
+        }
+
+        .w3l-account .literacy-login {
+            margin-top: 100px;
+        }
+    </style>
+
+
+    <!-- Bagian switch dark theme atau light theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+</body>
+</html>

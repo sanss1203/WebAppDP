@@ -1,0 +1,382 @@
+﻿<!-- Model PaymentViewModel berguna untuk memanggil data atau menyimpan data dari form ke database -->
+@model WebAppDP.Models.PaymentViewModel
+@{
+    Layout = null;
+    ViewBag.Title = "Checkout";
+
+
+
+}
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Pembayaran</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & Jquery -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body>
+    <!-- Bagian header -->
+    <section class="w3l-header">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("LoginSuccess", "Account")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                            aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                    </button>
+                    <!-- Bagian navigasi bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("LoginSuccess", "Account")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            @*<li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Alamat", "Distance")">Tambah Alamat</a>
+                            </li>*@
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                        </ul>
+                        <!-- Bagian navigasi bar untuk Dashboard user menggunakan icons fa-user -->
+                        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")">Order</a></li>
+
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian header -->
+    <!-- Bagian title pada body website -->
+    <nav id="breadcrumbs" class="breadcrumbs">
+        <div class="container page-wrapper text-center">
+            <div class="header-section">
+                <h2 class="mb-2">Pembayaran</h2>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bagian form untuk pembayaran -->
+    <section class="w3l-account py-5">
+        <div class="container py-lg-3">
+            <div class="literacy-login">
+                <div class="literacy-login-info">
+                    <h1 class="h2-literacy">Transfer </h1><br />
+                    <p class="h3-literacy">Harap di Transfer pada no Rekening dibawah ini</p>
+                    <p>Nama Bank: @ViewBag.NmaBank</p>
+                    <p>No Rekening: @ViewBag.noRek</p>
+                    <p>Nama Penerima: @ViewBag.nmP</p>
+
+                    <br />
+                    <div style="position: relative;">
+                        <div id="loadingSpinner" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("ActionPaymentFC", "Product", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
+                    {
+                        <label>Id Pesanan</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Id_pesanan, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.Id_pesanan)
+
+                        </div>
+
+                        <label>Nama Pemesan</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.NamaPemesan, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.NamaPemesan)
+
+                        </div>
+
+                        <label>Ukuran Desain</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.UkuranDesain, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.UkuranDesain)
+
+                        </div>
+
+                        <label>Jumlah Halaman</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.JumlahHalaman, new { @class = "form-control", @Value = ViewBag.JumlahHal, @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.JumlahHalaman)
+                        </div>
+
+                        <label>Jumlah Rangkap</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.JumlahCopy, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.JumlahCopy)
+                        </div>
+
+                        <label>Jumlah Ongkir</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.JumlahOngkir, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.JumlahOngkir)
+                        </div>
+
+                        <label>Total Pembayaran</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.HargaPembayaran, new { @class = "form-control", @Value = @ViewBag.Harga, @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.HargaPembayaran)
+                        </div>
+
+                        <label>Upload Bukti Transfer</label>
+                        <div class="form-group">
+                            <input type="file" required="" class="type-file" id="file" name="file" accept=".pdf,.jpg,.png" />
+                            @Html.ValidationMessageFor(model => model.BuktiTF)
+                        </div>
+                        <button type="submit" id="btnSubmit" class="btn btn-primary theme-button btn-login">Konfirmasi Pembayaran</button>
+
+
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- move top -->
+    <script>
+        // Ketika user scrolls down 20px kebawah pada halaman web, maka button move to top akan muncul
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("movetop").style.display = "block";
+            } else {
+                document.getElementById("movetop").style.display = "none";
+            }
+        }
+
+        //Ketika user mengklik button, maka web akan di scroll ke atas
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    <script>
+        $(function () {
+            $('.navbar-toggler').click(function () {
+                $('body').toggleClass('noscroll');
+            })
+        });
+    </script>
+
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+    <!--//MENU-JS-->
+    <!-- Bagian untuk switch dark theme atau light theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+
+    <!-- Style tambahan untuk bagian form pembayaran -->
+    <style>
+        #loadingSpinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        hr {
+            display: none;
+        }
+
+        .w3l-account .literacy-login-info {
+            max-width: 500px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            padding: 2em;
+            background: var(--bg-color);
+            box-shadow: var(--card-box-shadow);
+            border-radius: var(--border-radius);
+        }
+
+        .w3l-account .literacy-login h1 {
+            text-align: center;
+            font-size: 35px;
+            display: normal;
+            /*color: var(--title-color);*/
+            color: var(--primary-color);
+        }
+
+        .w3l-account .h3-literacy {
+            text-align: center;
+            font-size: 25px;
+            color: var(--title-color);
+        }
+
+        .w3l-account .p1-literacy {
+            text-align: center;
+            font-size: 25px;
+            color: var(--title-color);
+        }
+
+        .w3l-account .h3-li {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .w3l-account label {
+            color: var(--title-color);
+        }
+
+        .w3l-account .type-file {
+            color: var(--title-color);
+        }
+    </style>
+</body>
+</html>
+
+<!-- Pop up untuk konfirmasi pesanan -->
+<script>
+    $(document).ready(function () {
+        $('#myForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var url = $("div[data-action-url]").data("action-url");
+
+            Swal.fire({
+                title: "Konfirmasi Pembayaran",
+                text: "Apakah anda yakin ingin konfirmasi pembayaran ini?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Konfirmasi",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#loadingSpinner').show();
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: $(this).attr("method"),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            $('#loadingSpinner').show();
+                            if (data.message === "Pesanan berhasil di Konfirmasi") {
+                                Swal.fire("Sukses", data.message, "success").then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = data.redirectUrlsF
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "Gagal konfirmasi pembayaran, silahkan coba lagi nanti"
+                            });
+                        },
+                        complete: function () {
+                            $('#loadingSpinner').fadeOut();
+                        },
+                    });
+                }
+            });
+        });
+    });
+</script>

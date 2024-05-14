@@ -1,0 +1,238 @@
+﻿<!-- Model OrderPaymentViewModel merupakan gabungan dari model OrderViewModel dan PaymentViewModel -->
+@model List<WebAppDP.Models.ServicesViewModel>
+
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard - Fotocopy</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- Bootstrap & Jquery -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="~/assets/AdminPanel/css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>*@
+    <script src="~/assets/AdminPanel/js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="~/assets/AdminPanel/js/datatables-simple-demo.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="index.html">Admin</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            @*<div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>*@
+        </form>
+
+        <!-- Bagian navigasi bar -->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Rekening","Admin")">Ganti NoRekening</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Logout","Admin")">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Bagian Sidebar Navigasi -->
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="@Url.Action("Administration", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Order</div>
+                        <a class="nav-link" href="@Url.Action("TransferBank", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-money-check-alt"></i></div>
+                            Banner
+                        </a>
+                        <a class="nav-link" href="@Url.Action("FotoCopy", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-copy"></i></div>
+                            Foto Copy
+                        </a>
+                        <a class="nav-link" href="@Url.Action("JadwalService", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            Jadwal Service
+                        </a>
+                        <a class="nav-link" href="@Url.Action("GantiHargaProduct", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-dollar-sign"></i></div>
+                            Ganti Harga Product
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Bagian content utama -->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Jadwal Services</h1>
+                 
+
+                    <div class="row mt-4">
+                        <div class="col-sm-12 mx-auto ">
+                            <table class="table table-responsive table-striped">
+                                <!-- Nama field tabel -->
+                                <thead>
+                                    <tr>
+
+                                        <th>Nama lengkap</th>
+                                        <th>No Hp</th>
+                                        <th>Jenis Service</th>
+                                        <th>Jenis OS</th>
+                                        <th>Tanggal Masuk</th>
+                                        <th>Estimasi Selesai</th>
+                                        <th>Keterangan</th>
+                                        <th>Status</th>
+                                        <td>Action</td>
+                                    </tr>
+                                </thead>
+                                <!-- Isi tabel, menampilkan semua data pesanan berdasarkan jenis product Fotocopy-->
+                                <tbody>
+                                    @foreach (var order in Model)
+                                    {
+                                        <tr>
+                                            <td>@order.Nama_Lengkap</td>
+                                            <td>@order.No_hp</td>
+                                            <td>@order.Jnis_service</td>
+                                            <td>@order.Jnis_Os</td>
+                                            <td>@order.Tgl_masuk</td>
+                                            <td>@order.Estimasi_selesai</td>
+                                            <td>@order.Keterangan</td>
+
+
+                                            <form id="updateForm_@order.Id_services" method="post" action="@Url.Action("statusUpdate", "Admin", new { idz = @order.Id_services})">
+                                            <td>
+                                                <select name="status" class="form-select">
+                                                    <option value="Status Request" @(order.Status == "Status Request" ? "selected" : "")>Status Request</option>
+                                                    <option value="On Progress" @(order.Status == "On Progress" ? "selected" : "")>On Progress</option>
+                                                    <option value="Success" @(order.Status == "Success" ? "selected" : "")>Success</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-sm d-flex">
+                                                        <a href="@Url.Action("hapusRequest", "Admin", new { idS = order.Id_services })" onclick="return hapusRequests(event)" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                                                        <button type="button" onclick="confirmUpdate('@order.Id_services')" class="btn btn-primary btn-sm ml-2"><i class='fas fa-edit'>update</i></button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            </form>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            <script>
+                                function confirmUpdate(idz) {
+                                    // Tampilkan SweetAlert2 untuk konfirmasi update status
+                                    Swal.fire({
+                                        title: 'Konfirmasi',
+                                        text: 'Apakah Anda yakin ingin mengupdate status ini?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Ya, update!',
+                                        cancelButtonText: 'Batal',
+                                    }).then((result) => {
+                                        // Jika pengguna mengklik tombol "Ya", kirimkan form yang sesuai
+                                        if (result.isConfirmed) {
+                                            Swal.fire(
+                                                'Status Updated',
+                                                '',
+                                                'success'
+                                            ).then(() => {
+                                                // Membuat ID unik untuk form berdasarkan idz
+                                                const formId = "updateForm_" + idz;
+
+
+                                                // Submit form yang sesuai dengan ID uniknya
+                                                document.getElementById(formId).submit();
+                                            });
+                                            
+                                        }
+                                    });
+                                }
+                            </script>
+                          
+                            <script>
+                                function hapusRequests(event) {
+                                    event.preventDefault();
+                                    Swal.fire({
+                                        title: 'Apakah Anda yakin ingin menghapus Jadwal ini?',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#d33',
+                                        cancelButtonColor: '#3085d6',
+                                        confirmButtonText: 'Ya, hapus jadwal!',
+                                        cancelButtonText: 'Batal'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            Swal.fire(
+                                                'Jadwal berhasil dihapus!',
+                                                '',
+                                                'success'
+                                            ).then(() => {
+                                                window.location.href = event.target.href;
+                                            });
+                                        }
+                                    });
+                                }
+                    </script>
+
+                        </div>
+                    </div>
+               
+                    <!-- Bagian Tabel pesanan -->
+                    
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

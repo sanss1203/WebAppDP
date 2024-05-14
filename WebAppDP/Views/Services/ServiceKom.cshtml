@@ -1,0 +1,321 @@
+﻿<!-- Model OrderViewModel dipanggil untuk menyimpan dan memanggil data dari database -->
+@model WebAppDP.Models.ServicesViewModel
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+    Layout = null;
+}
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Order Banner</title>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="~/assets/css/style-liberty.css">
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    @* <script src="~/Scripts/jquery-3.4.1.js"></script>*@
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body class="dark">
+    <!-- Bagian header -->
+    <section class="w3l-header mb-lg-5">
+        <header id="site-header" class="fixed-top">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-dark stroke">
+                    <a class="navbar-brand" href="@Url.Action("LoginSuccess", "Account")">
+                        <!-- Icon Logo website, menggunakan Icons dari fontawesome -->
+                        <span class="fas fa-print"></span> DigitalPrint
+                    </a>
+                    <!-- Button toggler untuk navigasi bar ketika user melakukan resizing halaman website -->
+                    <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                        <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                    </button>
+                    <!-- Bagian Navigasi bar -->
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="@Url.Action("LoginSuccess", "Account")">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            @*<li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Alamat", "Distance")">Tambah Alamat</a>
+                            </li>*@
+                            <li class="nav-item contact-active">
+                                <a class="nav-link" href="@Url.Action("Contact", "Home")">Contact</a>
+                            </li>
+                        </ul>
+                        <!-- Bagian navigasi bar untuk Dashboard user menggunakan icons fa-user -->
+                        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Account")">Order</a></li>
+
+
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Bagian toggle Switch dark theme atau light theme -->
+                    <div class="mobile-position">
+                        <label class="theme-selector">
+                            <input type="checkbox" id="themeToggle">
+                            <i class="gg-sun"></i>
+                            <i class="gg-moon"></i>
+                        </label>
+                    </div>
+                </nav>
+            </div>
+        </header>
+    </section>
+    <!-- /Bagian header -->
+    @*<nav id="breadcrumbs" class="breadcrumbs">
+            <div class="container page-wrapper text-center">
+                <div class="header-section">
+                    <h3 class="mb-1">Order Banner</h3>
+                </div>
+            </div>
+
+
+        </nav>*@
+
+    <!-- Bagian Product Layanan -->
+    <section class="w3l-contact" id="contact">
+        <div class="contact-infubd py-5">
+
+            <div class="container py-lg-3">
+                <div class="contact-grids">
+                    <div class="title-order">
+                        <h3>Service Komputer</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="partners">
+                                <div class="hours">
+                                    <h6 class="mt-2">Catatan:</h6>
+                                </div>
+                                <p>
+                                    Isikan form ini untuk mendapatkan informasi terbaru dari layanan kami
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("StatusRequest", "Services", FormMethod.Post, new { id = "myForm" }))
+                    {
+                        <div class="row justify-content-center mt-1">
+                            <div class="col-lg-6 mt-lg-0 mx-auto ">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Nama_Lengkap, new { @class = "contact-input", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Nama_Lengkap)
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.No_hp, new { @class = "contact-input", placeholder = "Nomor Hp*", required = "", type = "number" })
+                                    @Html.ValidationMessageFor(model => model.No_hp)
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Jnis_service, new { @class = "contact-input", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Jnis_service)
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.TextBoxFor(model => model.Tgl_masuk, new { @class = "contact-input custom-datepicker", id = "datepicker", width = "276", placeholder = "Tanggal Masuk" })
+                                    @Html.ValidationMessageFor(model => model.Tgl_masuk)
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6 mx-auto">
+
+
+
+                                @*<input id="datepicker" style="width: 276;" data-model="Model.Tgl_Masuk" />*@
+                                <style>
+                                    .custom-datepicker .gj-icon {
+                                        font-size: 24px;
+                                    }
+
+                                    .custom-datepicker {
+                                        width: 250px;
+                                    }
+                                </style>
+                                @*<input class="contact-input" id="datepicker" width="276" />*@
+                                <script>
+                                    $('#datepicker').datepicker({
+                                        uiLibrary: 'bootstrap5',
+                                        format: 'yyyy-mm-dd'
+                                    });
+                                </script>
+
+                                <div class="form-group">
+                                    @Html.TextAreaFor(model => model.Keterangan, new { @class = "contact-input", placeholder = "Keterangan" })
+                                    @Html.ValidationMessageFor(model => model.Keterangan)
+                                </div>
+
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-primary theme-button" id="btnSubmit">Buat Jadwal</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Function untuk Disable body scroll ketika nav toggle aktif -->
+    <script>
+        $(window).on("scroll", function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 80) {
+                $("#site-header").addClass("nav-fixed");
+            } else {
+                $("#site-header").removeClass("nav-fixed");
+            }
+        });
+
+        //Main navigation Active Class Add Remove
+        $(".navbar-toggler").on("click", function () {
+            $("header").toggleClass("active");
+        });
+        $(document).on("ready", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+            $(window).on("resize", function () {
+                if ($(window).width() > 991) {
+                    $("header").removeClass("active");
+                }
+            });
+        });
+    </script>
+
+    <!-- Function untuk Switch Dark theme atau Light Theme -->
+    <script>
+        const bodyElement = document.querySelector('body');
+        const themeToggle = document.querySelector('#themeToggle');
+        const darkModeMql = window.matchMedia('(prefers-color-scheme: dark)');
+
+
+
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : userPreference(darkModeMql);
+
+        if (currentTheme) {
+            bodyElement.classList.add(currentTheme);
+
+            if (currentTheme === 'dark') {
+                themeToggle.checked = true;
+            }
+        }
+
+        function userPreference(e) {
+            if (e.matches) {
+                bodyElement.classList.add("dark");
+                return "dark"
+            } else {
+                bodyElement.classList.remove("dark");
+                return ""
+            }
+        }
+
+        darkModeMql.addListener(userPreference);
+
+        function themeSwitcher(e) {
+            if (e.target.checked) {
+                bodyElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                bodyElement.classList.remove('dark');
+                localStorage.setItem('theme', '');
+            }
+        }
+
+        themeToggle.addEventListener('change', themeSwitcher);
+    </script>
+    <!-- /Function untuk Switch Dark theme atau Light Theme -->
+    <!-- style tambahan untuk bagian Form Pesanan -->
+    <style>
+        .w3l-contact .form-control-modifx {
+            font-weight: normal;
+            font-style: normal;
+            font-family: inherit;
+            border: none;
+            color: var(--title-color);
+            font-size: 16px;
+            width: 100%;
+            height: 55px;
+            background: var(--bg-color);
+            padding: 0px 20px;
+            outline: none;
+            border-radius: var(--border-radius);
+            border-width: 1px;
+            border-style: solid;
+            border-color: var(--border-color);
+            -o-border-image: initial;
+            border-image: initial;
+            margin-bottom: 10px;
+        }
+
+        .w3l-contact .label-desing-B {
+            color: var(--title-color);
+        }
+
+        .title-order {
+            color: var(--title-color);
+            text-align: center;
+        }
+    </style>
+</body>
+</html>
+<!-- Function untuk konfirmasi pesanan -->
+<script>
+    $(document).ready(function () {
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            var isValid = true;
+            $('#myForm input[required]').each(function () {
+                if ($.trim($(this).val()) == '') {
+                    isValid = false;
+                    return false;
+                }
+            });
+            if (isValid) {
+                swal.fire({
+                    title: "Apakah Anda yakin ingin membuat Jadwal?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Buat Jadwal",
+                    cancelButtonText: "Tidak, saya batal"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        swal.fire("Jadwal berhasil dikirimkan", "", "success");
+                        setTimeout(function () {
+                            $('#myForm').submit();
+                        }, 1000);
+                    }
+                });
+            } else {
+                swal.fire("Harap isi semua field yang diperlukan.", "", "error");
+            }
+        });
+    });
+</script>

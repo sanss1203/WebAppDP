@@ -1,0 +1,273 @@
+﻿@model  List<WebAppDP.Models.ProductHargaModel>
+
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required Meta tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Dashboard</title>
+
+    <!-- Fontawesome Icons -->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap & Jquery -->
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="~/assets/AdminPanel/css/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="~/assets/AdminPanel/js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="~/assets/AdminPanel/js/datatables-simple-demo.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="index.html">Admin</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            @*<div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>*@
+        </form>
+
+        <!-- Bagian navigasi bar -->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="#!">Ganti NoRekening</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Admin")">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Bagian Sidebar Navigasi -->
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="@Url.Action("Administration", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Order</div>
+                        <a class="nav-link" href="@Url.Action("TransferBank", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-money-check-alt"></i></div>
+                            Banner
+                        </a>
+                        <a class="nav-link" href="@Url.Action("FotoCopy", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-copy"></i></div>
+                            Foto Copy
+                        </a>
+                        <a class="nav-link" href="@Url.Action("JadwalService", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            Jadwal Service
+                        </a>
+                        <a class="nav-link" href="@Url.Action("GantiHargaProduct", "Admin" )">
+                            <div class="sb-nav-link-icon"><i class="fas fa-dollar-sign"></i></div>
+                            Ganti Harga Product
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Bagian content utama -->
+        <div id="layoutSidenav_content">
+            <main>
+
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Data Harga Product</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active"></li>
+                    </ol>
+                </div>
+
+                <div class="row justify-content-center mt-1">
+                    <div class="col-lg-5 mt-lg-0 mx-auto ">
+                        @using (Html.BeginForm("simpanNewHarga", "Admin", FormMethod.Post, new { id = "myForm" }))
+                        {
+                            <div class="mb-3">
+                                <label for="JenisProduct">Jenis Product</label>
+                                <select class="form-select mb-2" id="JenisProduct" name="JenisProduct" required>
+                                    <option value="">Pilih Jenis Product</option>
+                                    <option value="Banner 60cm x 160cm">Banner 60cm x 160cm</option>
+                                    <option value="Banner 80cm x 200cm">Banner 80cm x 200cm</option>
+                                    <option value="Banner 100cm x 250cm">Banner 100cm x 250cm</option>
+                                    <option value="FotoCopy/Print">FotoCopy/Print</option>
+                                </select>
+                            </div>
+
+                            <div class="mt-3">
+                                <label for="latitude">Harga</label>
+                                <input class="form-control mb-2" id="HargaProduct" name="HargaProduct" type="number" required />
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <button class="btn btn-primary" type="submit">Simpan Harga</button>
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="row mx-auto">
+                        <div class="row mt-4">
+                            <div class="col-sm-10 justify-content-center mx-auto mt-4">
+                                @if (Model.Any())
+                                {
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <!-- Nama field tabel -->
+                                            <thead>
+                                                <tr>
+                                                    <th>Jenis Product</th>
+                                                    <th>Harga</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <!-- Isi tabel, menampilkan semua data pesanan berdasarkan jenis product Fotocopy-->
+                                            <tbody>
+                                                @foreach (var tf in Model)
+                                                {
+                                                    <tr>
+                                                        <td>@tf.JenisProduct</td>
+                                                        <td>@tf.HargaProduct</td>
+                                                        <td>
+                                                            <a class="btn btn-danger" href="@Url.Action("HapusDataHarga", "Admin", new { jenisProduct = @tf.JenisProduct})" onclick="return hapusPesanan(event)">
+                                                                Hapus Harga
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+
+                                else
+                                {
+                                    <p>Belum ada data Harga</p>
+                                }
+                                <script>
+                                    function hapusPesanan(event) {
+                                        event.preventDefault();
+                                        var url = event.target.href;
+
+                                        Swal.fire({
+                                            title: 'Apakah Anda yakin ingin menghapus Data ini?',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            cancelButtonColor: '#3085d6',
+                                            confirmButtonText: 'Ya, Hapus!',
+                                            cancelButtonText: 'Batal'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                $.ajax({
+                                                    url: url,
+                                                    type: 'GET',
+                                                    success: function (data) {
+                                                        if (data.status === "success") {
+                                                            Swal.fire("Sukses", data.message, "success").then((result) => {
+                                                                window.location.reload();
+                                                            });
+                                                        }
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        window.location.reload();
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                </script>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        $('#myForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var url = $("div[data-action-url]").data("action-url");
+
+            Swal.fire({
+                title: "Konfirmasi Harga",
+                text: "Apakah Anda yakin ingin menggunakan harga ini?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Konfirmasi",
+                cancelButtonText: "Batal",
+            }).then((result) => {
+                if (result.isConfirmed) {
+        
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: $(this).attr("method"),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                   
+                            if (data.message === "Data berhasil disimpan") {
+                                Swal.fire("Sukses", data.message, "success").then((result) => {
+                                    window.location.reload();
+                                });
+                            } else if (data.status === "error") {
+                                Swal.fire("Error", data.message, "error").then((result) => {
+                                    window.location.reload();
+                                })
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "Gagal konfirmasi pembayaran, silahkan coba lagi nanti"
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
